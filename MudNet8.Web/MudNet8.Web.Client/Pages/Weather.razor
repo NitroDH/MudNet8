@@ -1,5 +1,5 @@
 ﻿@page "/weather"
-@rendermode InteractiveAuto
+@rendermode InteractiveAuto 
 @inject WeatherForecastService WeatherForecastService
 
 <PageTitle>Weather</PageTitle>
@@ -21,7 +21,7 @@ else
             <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.Summary!)">Summary</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-        <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
             <MudTd DataLabel="Temp. (C)">@context.TemperatureC</MudTd>
             <MudTd DataLabel="Temp. (F)">@context.TemperatureF</MudTd>
             <MudTd DataLabel="Summary">@context.Summary</MudTd>
