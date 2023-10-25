@@ -1,0 +1,31 @@
+﻿@rendermode InteractiveAuto
+@inject ThemeStateProvider ThemeStateProvider
+
+@*Centralized Mud Services for the Theme allowing interactivity state both server, was, auto*@
+
+<MudThemeProvider @ref="@ThemeStateProvider.MudThemeProvider"
+                  @bind-IsDarkMode="@ThemeStateProvider.ActiveMode.IsDark"
+                  Theme="@ThemeStateProvider.MudTheme"
+                  />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ThemeStateProvider.MainLayoutStateChanged += UpdateMainLayoutState;
+            await ThemeStateProvider.OnAfterMainLayoutRender(firstRender);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void UpdateMainLayoutState() => StateHasChanged();
+
+    public void Dispose()
+    {
+        ThemeStateProvider.MainLayoutStateChanged -= UpdateMainLayoutState;
+    }
+}

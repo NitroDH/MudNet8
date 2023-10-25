@@ -1,0 +1,66 @@
+﻿@rendermode InteractiveAuto
+@inject ThemeStateProvider ThemeStateProvider
+@inject NavigationManager NavigationManager
+
+@*Really don't understand why not even basic NavLinks work (for active state) with interactivity modes outside of SSR had to go custom here*@
+
+<MudDrawer @bind-Open="ThemeStateProvider.NavBarOpen" ClipMode=" DrawerClipMode.Always" Elevation="2" Class="mud-drawer-fixed">
+    <MudDrawerContainer Style="height:100%; max-height:100%" Class="d-flex flex-column justify-space-between">
+        <MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Class="pa-2">
+            <a @onclick="@(() => NavigateTo(""))" class="mud-nav-link @GetActive("", NavLinkMatch.All)">
+                <MudIcon Icon="@Icons.Material.Filled.Home" IconColor="Color.Default" Class="mud-nav-link-icon" />
+                <div class="mud-nav-link-text">
+                    Home
+                </div>
+            </a>
+            <a @onclick="@(() => NavigateTo("counter"))" class="mud-nav-link @GetActive("counter")">
+                <MudIcon Icon="@Icons.Material.Filled.Add" IconColor="Color.Default" Class="mud-nav-link-icon" />
+                <div class="mud-nav-link-text">
+                    Counter
+                </div>
+            </a>
+            <a @onclick="@(() => NavigateTo("weather"))" class="mud-nav-link @GetActive("weather")">
+                <MudIcon Icon="@Icons.Material.Filled.List" IconColor="Color.Default" Class="mud-nav-link-icon" />
+                <div class="mud-nav-link-text">
+                    User Weather
+                </div>
+            </a>
+        </MudNavMenu>
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-2">Copyright &copy; Your App LLC</MudText>
+    </MudDrawerContainer>
+</MudDrawer>
+
+@code {
+    public string CurrentLocation = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ThemeStateProvider.NavAsideStateChanged += UpdateNavAsideState;
+            NavigationManager.RegisterLocationChangingHandler(OnLocationChanging);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private string GetActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix) => 
+        IsActive(href, navLinkMatch) ? "active" : "";
+
+    private bool IsActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix) =>
+        navLinkMatch == NavLinkMatch.All ? CurrentLocation == href.ToLower() : CurrentLocation.StartsWith(href.ToLower());
+
+    private ValueTask OnLocationChanging(LocationChangingContext context)
+    {
+        CurrentLocation = context.TargetLocation;
+        return ValueTask.CompletedTask;
+    }
+
+    private void NavigateTo(string href) => NavigationManager.NavigateTo(href);
+
+    public void UpdateNavAsideState() => StateHasChanged();
+
+    public void Dispose()
+    {
+        ThemeStateProvider.NavAsideStateChanged -= UpdateNavAsideState;
+    }
+}

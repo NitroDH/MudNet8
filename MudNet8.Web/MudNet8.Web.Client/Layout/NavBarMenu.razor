@@ -1,0 +1,16 @@
+﻿
+@*Interactivity cascades from parent NavBar*@
+
+<MudMenu ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+    <ActivatorContent>
+        <MudAvatar>U</MudAvatar>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem Href="MyProfile" Icon="@Icons.Material.Outlined.Person">My Profile</MudMenuItem>
+        <MudMenuItem Href="SignOut" Icon="@Icons.Material.Outlined.Logout">Sign Out</MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+
+}

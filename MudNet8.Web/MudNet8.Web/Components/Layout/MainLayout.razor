@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<MudServices />
+<MudLayout>
+    <NavBar />
+    <NavAside />
+    <MudMainContent>
+        <MudContainer MaxWidth="@MaxWidth.ExtraExtraLarge" Class="mt-5">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+
+}

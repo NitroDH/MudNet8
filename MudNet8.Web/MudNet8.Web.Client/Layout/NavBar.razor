@@ -1,0 +1,35 @@
+﻿@rendermode InteractiveAuto
+@inject ThemeStateProvider ThemeStateProvider
+@inject IJSRuntime JS
+
+<MudAppBar Elevation="2" > 
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleNavAside())" />
+    <MudText Typo="Typo.h5" Class="ml-3">Nitro</MudText>  
+    <MudSpacer />   
+    <MudTooltip Text="@ThemeStateProvider.ActiveMode.ToolTip">
+        <MudIconButton Color="Color.Inherit" Icon="@ThemeStateProvider.ActiveMode.Icon" OnClick="@((e) => ThemeStateProvider.SetActiveThemeMode())" />
+    </MudTooltip>
+    <NavBarMenu />
+</MudAppBar>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            ThemeStateProvider.NavBarStateChanged += UpdateAppBarState;
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void UpdateAppBarState() => StateHasChanged();
+
+    private async Task ToggleNavAside()
+    {
+        ThemeStateProvider.ToggleNavAside();
+        await JS.InvokeVoidAsync("themeFunctions.toggleNavAside");
+    }
+
+    public void Dispose()
+    {
+        ThemeStateProvider.NavBarStateChanged -= UpdateAppBarState;
+    }
+}
